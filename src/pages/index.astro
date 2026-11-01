@@ -1,6 +1,7 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import { u } from '../lib/base';
+import ContactForm from '../components/ContactForm.astro';
 ---
 <Layout title="Slip din købetrang – hjælp til købeafhængighed" description="Online selvstudieforløbet Slip din købetrang hjælper dig med at forstå og ændre mønstre bag impulskøb og overforbrug. 3.499 kr. inkl. moms.">
   <section class="hero">
@@ -58,4 +59,5 @@ import { u } from '../lib/base';
     <details><summary>Hvornår kan jeg starte?</summary><p>Du får adgang, så snart din tilmelding er bekræftet, og bestemmer selv tempo og tidspunkt.</p></details>
     <details><summary>Er det kun relevant, hvis jeg har gæld?</summary><p>Nej. Problemet handler ikke kun om beløbet, men om tab af kontrol, skjulte køb, skam eller at shopping fylder mere, end du ønsker.</p></details>
   </div></div></section>
+  <ContactForm />
 </Layout>
