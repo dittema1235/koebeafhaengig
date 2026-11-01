@@ -51,5 +51,6 @@ src/
 Sitets er statisk og kan hostes hvor som helst:
 
 - Byg med `npm run build` → upload `dist/`.
+- Produktion udgives automatisk via Cloudflare Pages, når der pushes til `main`.
 - Sitemap genereres automatisk på `/sitemap.xml` (`site: https://www.koebeafhaengig.dk`).
 - `public/robots.txt` følger med i bygget.
