@@ -1,10 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import data from '../../data/articles.json';
+import { u } from '../../lib/base';
 export function getStaticPaths() { return data.legacy.map(post => ({ params: { slug: post.slug }, props: { post } })); }
 const { post } = Astro.props;
 ---
 <Layout title={post.title} description={post.excerpt} type="article">
-  <header class="page-hero"><div class="narrow"><a class="eyebrow" href="/blog">← Tilbage til blogarkivet</a><h1>{post.title}</h1><p class="article-meta">Af Ditte Munch-Andersen {post.date && `· ${post.date}`} {post.readingTime && `· ${post.readingTime}`}</p></div></header>
-  <section class="content-section"><article class="narrow prose">{post.image && <img src={post.image} alt="" loading="lazy" />}<Fragment set:html={post.content} /></article><div class="narrow article-cta"><h3>Slip din købetrang</h3><p>Få hjælp til at forstå og ændre de mønstre, der driver dine impulskøb. Onlineforløbet har én Basis-pakke, og individuelle samtaler kan tilkøbes efter behov.</p><a class="btn" href="/#forloeb">Læs om forløbet</a></div></section>
+  <header class="page-hero"><div class="narrow"><a class="eyebrow" href={u('/blog')}>← Tilbage til blogarkivet</a><h1>{post.title}</h1><p class="article-meta">Af Ditte Munch-Andersen {post.date && `· ${post.date}`} {post.readingTime && `· ${post.readingTime}`}</p></div></header>
+  <section class="content-section"><article class="narrow prose">{post.image && <img src={post.image} alt="" loading="lazy" />}<Fragment set:html={post.content.replaceAll('href="/', `href="${u('/')}`)} /></article><div class="narrow article-cta"><h3>Slip din købetrang</h3><p>Få hjælp til at forstå og ændre de mønstre, der driver dine impulskøb. Onlineforløbet har én Basis-pakke, og individuelle samtaler kan tilkøbes efter behov.</p><a class="btn" href={`${u('/')}#forloeb`}>Læs om forløbet</a></div></section>
 </Layout>

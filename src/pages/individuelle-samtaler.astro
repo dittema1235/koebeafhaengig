@@ -1,5 +1,6 @@
 ---
 import Layout from '../layouts/Layout.astro';
+import { u } from '../lib/base';
 ---
 <Layout title="Individuelle samtaler om købeafhængighed" description="Individuelle samtaler med klinisk psykolog Ditte Munch-Andersen om købeafhængighed, impulskøb og overforbrug. I Helsingør eller online.">
   <header class="page-hero"><div class="wrap"><span class="eyebrow">Personlig støtte efter behov</span><h1>Individuelle samtaler om købeafhængighed</h1><p class="lead">Til dig, der ønsker personlig hjælp til at forstå og ændre din købetrang — i Helsingør eller online.</p></div></header>
@@ -11,7 +12,7 @@ import Layout from '../layouts/Layout.astro';
       <h2>Det kan vi arbejde med</h2>
       <ul><li>Impulskøb og gentagne perioder med overforbrug</li><li>Skam, hemmeligholdelse og konflikter om penge</li><li>Shopping som reaktion på stress, ensomhed eller svære følelser</li><li>Tanker og undskyldninger, der opstår lige før et køb</li><li>Tilbagefald og hvordan du kommer videre uden selvkritik</li><li>At genopbygge tillid til dig selv og i dine relationer</li></ul>
       <h2>En samtale ad gangen</h2>
-      <p>Du behøver ikke beslutte dig for et langt behandlingsforløb. Du kan booke en enkelt samtale og derefter vurdere, om du har brug for flere. Samtaler kan også tilkøbes undervejs, hvis du arbejder med onlineforløbet <a href="/#forloeb">Slip din købetrang</a>.</p>
+      <p>Du behøver ikke beslutte dig for et langt behandlingsforløb. Du kan booke en enkelt samtale og derefter vurdere, om du har brug for flere. Samtaler kan også tilkøbes undervejs, hvis du arbejder med onlineforløbet <a href={`${u('/')}#forloeb`}>Slip din købetrang</a>.</p>
       <div class="notice"><strong>Vigtigt:</strong> Individuelle samtaler er et separat tilbud og er ikke inkluderet i Basis-pakken. Du kan tilkøbe dem efter behov — før, under eller efter onlineforløbet.</div>
       <h2>Faglig tilgang</h2>
       <p>Jeg arbejder primært med kognitiv adfærdsterapi og metakognitiv terapi. Fokus er på de mønstre, tanker og reaktioner, der holder problemet i gang nu — og på konkrete redskaber, du kan afprøve mellem samtalerne.</p>

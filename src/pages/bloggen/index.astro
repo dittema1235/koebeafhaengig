@@ -1,10 +1,11 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import data from '../../data/articles.json';
+import { u } from '../../lib/base';
 ---
 <Layout title="Blog om købeafhængighed" description="Artikler om købeafhængighed, overforbrug og psykologien bag købetrang — skrevet af klinisk psykolog Ditte Munch-Andersen.">
   <header class="page-hero"><div class="wrap"><span class="eyebrow">Viden og indsigt</span><h1>Artikler om købeafhængighed</h1><p class="lead">Viden om overforbrug, hverdagsafhængighed og den psykologi, der driver adfærden.</p></div></header>
   <section class="content-section"><div class="wrap"><div class="card-grid">
-    {data.modern.map(post => <a class="post-card" href={`/bloggen/${post.slug}`}><span class="eyebrow">{post.category}</span><h2>{post.title}</h2><p>{post.excerpt}</p><span class="read">Læs artiklen · {post.readingTime} →</span></a>)}
-  </div><div style="margin-top:80px"><span class="eyebrow">Fra arkivet</span><h2 style="font-size:3rem">Flere artikler om købetrang</h2><div class="legacy-list">{data.legacy.map(post => <a class="legacy-card" href={`/blog/${post.slug}`}><h3>{post.title}</h3><p>{post.excerpt}</p></a>)}</div></div></div></section>
+    {data.modern.map(post => <a class="post-card" href={u(`/bloggen/${post.slug}`)}><span class="eyebrow">{post.category}</span><h2>{post.title}</h2><p>{post.excerpt}</p><span class="read">Læs artiklen · {post.readingTime} →</span></a>)}
+  </div><div style="margin-top:80px"><span class="eyebrow">Fra arkivet</span><h2 style="font-size:3rem">Flere artikler om købetrang</h2><div class="legacy-list">{data.legacy.map(post => <a class="legacy-card" href={u(`/blog/${post.slug}`)}><h3>{post.title}</h3><p>{post.excerpt}</p></a>)}</div></div></div></section>
 </Layout>

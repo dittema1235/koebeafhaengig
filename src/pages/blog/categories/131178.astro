@@ -1,3 +1,4 @@
 ---
-return Astro.redirect('/blog', 301);
+import { u } from '../../../lib/base';
+return Astro.redirect(u('/blog'), 301);
 ---

@@ -1,5 +1,6 @@
 ---
 import '../styles/global.css';
+import { u } from '../lib/base';
 interface Props { title: string; description?: string; canonical?: string; type?: string; }
 const { title, description = 'Få hjælp til købeafhængighed og overforbrug med psykolog Ditte Munch-Andersen. Onlineforløb og individuelle samtaler.', canonical = Astro.url.pathname, type = 'website' } = Astro.props;
 const canonicalUrl = new URL(canonical, 'https://www.koebeafhaengig.dk').toString();
@@ -37,15 +38,15 @@ const schema = {
     <header class="site-header">
       <div class="utility">ONLINEFORLØB · 100% DISKRET · START NÅR DET PASSER DIG</div>
       <div class="nav wrap">
-        <a class="brand" href="/">Slip din købetrang<small>psykolog Ditte Munch-Andersen</small></a>
+        <a class="brand" href={u('/')}>Slip din købetrang<small>psykolog Ditte Munch-Andersen</small></a>
         <nav class="nav-links" id="nav-links" aria-label="Primær navigation">
-          <a href="/#forloeb">Onlineforløbet</a>
-          <a href="/individuelle-samtaler">Individuelle samtaler</a>
-          <a href="/om-ditte">Om Ditte</a>
-          <a href="/bloggen">Blog</a>
-          <a href="/kontakt">Kontakt</a>
+          <a href={`${u('/')}#forloeb`}>Onlineforløbet</a>
+          <a href={u('/individuelle-samtaler')}>Individuelle samtaler</a>
+          <a href={u('/om-ditte')}>Om Ditte</a>
+          <a href={u('/bloggen')}>Blog</a>
+          <a href={u('/kontakt')}>Kontakt</a>
         </nav>
-        <a class="btn" href="/#forloeb">Se forløbet</a>
+        <a class="btn" href={`${u('/')}#forloeb`}>Se forløbet</a>
         <button class="menu-toggle" aria-label="Åbn menu" aria-controls="nav-links" aria-expanded="false">☰</button>
       </div>
     </header>
@@ -53,10 +54,10 @@ const schema = {
     <footer class="site-footer">
       <div class="wrap footer-grid">
         <div><h3>Slip din købetrang</h3><p>Et online selvstudieforløb om købeafhængighed og overforbrug — udviklet af klinisk psykolog Ditte Munch-Andersen.</p></div>
-        <div><h3>Find vej</h3><ul><li><a href="/#forloeb">Onlineforløbet</a></li><li><a href="/individuelle-samtaler">Individuelle samtaler</a></li><li><a href="/bloggen">Artikler</a></li><li><a href="/om-ditte">Om Ditte</a></li></ul></div>
-        <div><h3>Kontakt</h3><p><a href="mailto:psykolog@dittemunchandersen.dk">psykolog@dittemunchandersen.dk</a></p><p><a href="/kontakt">Kontakt Ditte</a></p></div>
+        <div><h3>Find vej</h3><ul><li><a href={`${u('/')}#forloeb`}>Onlineforløbet</a></li><li><a href={u('/individuelle-samtaler')}>Individuelle samtaler</a></li><li><a href={u('/bloggen')}>Artikler</a></li><li><a href={u('/om-ditte')}>Om Ditte</a></li></ul></div>
+        <div><h3>Kontakt</h3><p><a href="mailto:psykolog@dittemunchandersen.dk">psykolog@dittemunchandersen.dk</a></p><p><a href={u('/kontakt')}>Kontakt Ditte</a></p></div>
       </div>
-      <div class="wrap footer-bottom">© {new Date().getFullYear()} Ditte Munch-Andersen · <a href="/privatlivspolitik">Privatlivspolitik</a> · <a href="/handelsbetingelser">Handelsbetingelser</a></div>
+      <div class="wrap footer-bottom">© {new Date().getFullYear()} Ditte Munch-Andersen · <a href={u('/privatlivspolitik')}>Privatlivspolitik</a> · <a href={u('/handelsbetingelser')}>Handelsbetingelser</a></div>
     </footer>
     <script is:inline>
       const button = document.querySelector('.menu-toggle');
