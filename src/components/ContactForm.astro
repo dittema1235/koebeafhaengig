@@ -1,0 +1,292 @@
+---
+import { u } from '../lib/base';
+
+// Samme Google Apps Script som kontaktformularerne på de andre sites.
+// Mails går til psykolog@dittemunchandersen.dk.
+const endpoint =
+  'https://script.google.com/macros/s/AKfycbxYSvV0gGSpMdT5fysQ05lWqOC6RvdQHn1XaL9ukHs9UnsTIaleJiLYkgHxfVf3S-mG/exec';
+---
+
+<section class="content-section contact-form-section" id="kontaktformular">
+  <div class="wrap">
+    <div class="form-card">
+      <span class="eyebrow">Send en besked</span>
+      <h2>Skriv til mig, eller bliv ringet op</h2>
+      <p class="form-intro">
+        Vælg herunder, om du vil have et opkald eller svar på mail. Fortæl kort, hvad du går og tænker på, så tager jeg den derfra.
+      </p>
+
+      <form class="contact-form" data-contact-form data-endpoint={endpoint}>
+        <fieldset class="contact-choice">
+          <legend>Hvad passer dig bedst?</legend>
+          <label class="choice">
+            <input type="radio" name="contactpref" value="mail" checked />
+            <span>Skriv til mig på mail</span>
+          </label>
+          <label class="choice">
+            <input type="radio" name="contactpref" value="call" />
+            <span>Ring mig op</span>
+          </label>
+        </fieldset>
+
+        <label class="field">
+          <span>Dit navn</span>
+          <input type="text" name="name" autocomplete="name" required maxlength="200" />
+        </label>
+
+        <label class="field">
+          <span>Dit telefonnummer <span class="optional" data-phone-optional>(valgfrit)</span></span>
+          <input type="tel" name="phone" autocomplete="tel" inputmode="tel" maxlength="40" />
+        </label>
+
+        <label class="field">
+          <span>Din e-mail</span>
+          <input type="email" name="email" autocomplete="email" required maxlength="200" />
+        </label>
+
+        <label class="field">
+          <span>Din besked <span class="optional" data-message-optional hidden>(valgfri)</span></span>
+          <textarea name="message" rows="5" maxlength="3000" required></textarea>
+        </label>
+
+        <div class="hp" aria-hidden="true">
+          <label>Lad dette felt være tomt<input type="text" name="website" tabindex="-1" autocomplete="off" /></label>
+        </div>
+
+        <button class="btn" type="submit">Send, og få svar på mail</button>
+        <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+
+        <p class="form-note">
+          Skriv ikke CPR-nummer eller følsomme helbredsoplysninger her. Det taler vi om, hvis vi snakkes ved. Når du
+          sender formularen, sendes dine oplysninger som e-mail via Google til mig. Læs mere i
+          <a href={u('/privatlivspolitik/')}>privatlivspolitikken</a>.
+        </p>
+      </form>
+    </div>
+  </div>
+</section>
+
+<script>
+  const T = {
+    buttonCall: 'Send, og bliv ringet op',
+    buttonMail: 'Send, og få svar på mail',
+    sending: 'Sender …',
+    error: 'Beskeden blev ikke sendt. Skriv i stedet til mig på psykolog@dittemunchandersen.dk.',
+    okCall: 'Tak, din besked er sendt. Jeg ringer til dig.',
+    okMail: 'Tak, din besked er sendt. Jeg skriver tilbage til dig på mail.',
+    msgCall: 'Henvendelse fra koebeafhaengig.dk. Vedkommende vil gerne ringes op.',
+    msgMail: 'Henvendelse fra koebeafhaengig.dk. Vedkommende vil gerne have en mail tilbage.',
+  };
+
+  document.querySelectorAll<HTMLFormElement>('[data-contact-form]').forEach((form) => {
+    const loadedAt = Date.now();
+    const status = form.querySelector('[data-form-status]') as HTMLElement;
+    const button = form.querySelector('button[type="submit"]') as HTMLButtonElement;
+    const phoneInput = form.querySelector('input[name="phone"]') as HTMLInputElement;
+    const phoneOptional = form.querySelector('[data-phone-optional]') as HTMLElement;
+    const messageInput = form.querySelector('textarea[name="message"]') as HTMLTextAreaElement;
+    const messageOptional = form.querySelector('[data-message-optional]') as HTMLElement;
+    let sending = false;
+
+    const pref = () => (form.querySelector('input[name="contactpref"]:checked') as HTMLInputElement).value;
+    const setStatus = (state: string, text: string) => {
+      status.setAttribute('data-state', state);
+      status.textContent = text;
+    };
+    const update = () => {
+      const call = pref() === 'call';
+      phoneInput.required = call;
+      phoneOptional.hidden = call;
+      messageInput.required = !call;
+      messageOptional.hidden = !call;
+      if (!sending) button.textContent = call ? T.buttonCall : T.buttonMail;
+    };
+    const reset = () => {
+      sending = false;
+      button.disabled = false;
+      update();
+    };
+
+    form.addEventListener('change', (event) => {
+      if ((event.target as HTMLInputElement).name === 'contactpref') update();
+    });
+
+    form.addEventListener('submit', async (event) => {
+      event.preventDefault();
+      if (sending) return;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+      const data = new FormData(form);
+      const call = pref() === 'call';
+      if (data.get('website')) {
+        setStatus('success', call ? T.okCall : T.okMail);
+        return;
+      }
+      const phone = String(data.get('phone') || '').trim();
+      const userMessage = String(data.get('message') || '').trim();
+      const lines = [call ? T.msgCall : T.msgMail];
+      if (phone) lines.push('Telefon: ' + phone);
+      if (userMessage) lines.push('', userMessage);
+
+      const body = new URLSearchParams();
+      body.set('name', String(data.get('name')).trim());
+      body.set('email', String(data.get('email')).trim());
+      body.set('phone', phone);
+      body.set('contactpref', call ? 'ring' : 'mail');
+      body.set('message', lines.join('\n'));
+      body.set('website', '');
+      body.set('elapsed', String(Date.now() - loadedAt));
+
+      sending = true;
+      button.disabled = true;
+      button.textContent = T.sending;
+      setStatus('', '');
+
+      try {
+        const response = await fetch(form.dataset.endpoint as string, { method: 'POST', body });
+        const result = await response.json();
+        if (!response.ok || result?.ok === false || result?.success === false || result?.error) {
+          throw new Error('send');
+        }
+        form.reset();
+        reset();
+        setStatus('success', call ? T.okCall : T.okMail);
+      } catch {
+        reset();
+        setStatus('error', T.error);
+      }
+    });
+
+    update();
+  });
+</script>
+
+<style>
+  .contact-form-section {
+    padding-top: 0;
+  }
+  .form-card {
+    max-width: 760px;
+    margin: 0 auto;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    padding: 40px;
+  }
+  .form-card h2 {
+    margin: 0 0 12px;
+  }
+  .form-intro {
+    color: var(--ink-2);
+    margin: 0 0 28px;
+  }
+  .contact-form {
+    display: grid;
+    gap: 20px;
+  }
+  .contact-choice {
+    border: 0;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+  }
+  .contact-choice legend {
+    font-weight: 600;
+    padding: 0;
+    margin-bottom: 10px;
+  }
+  .choice {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    cursor: pointer;
+  }
+  .choice:has(input:checked) {
+    border-color: var(--ink);
+    background: var(--mint);
+  }
+  .choice input {
+    accent-color: var(--ink);
+    width: 18px;
+    height: 18px;
+    margin: 0;
+  }
+  .field {
+    display: grid;
+    gap: 8px;
+    font-weight: 600;
+  }
+  .optional {
+    font-weight: 400;
+    color: var(--muted);
+  }
+  .field input,
+  .field textarea {
+    width: 100%;
+    padding: 14px 16px;
+    border: 1px solid var(--line);
+    border-radius: 12px;
+    background: var(--white);
+    color: var(--ink);
+    font: inherit;
+    font-weight: 400;
+  }
+  .field textarea {
+    resize: vertical;
+    min-height: 130px;
+  }
+  .field input:focus-visible,
+  .field textarea:focus-visible,
+  .choice:has(input:focus-visible) {
+    outline: 2px solid var(--orange);
+    outline-offset: 2px;
+  }
+  .hp {
+    position: absolute;
+    left: -9999px;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+  }
+  .contact-form .btn {
+    cursor: pointer;
+    font: inherit;
+    font-weight: 600;
+    justify-self: start;
+  }
+  .contact-form .btn:disabled {
+    opacity: 0.6;
+    cursor: wait;
+  }
+  .form-status {
+    margin: 0;
+    font-weight: 600;
+  }
+  .form-status:empty {
+    display: none;
+  }
+  .form-status[data-state='success'] {
+    color: var(--ink-2);
+  }
+  .form-status[data-state='error'] {
+    color: #a32b2b;
+  }
+  .form-note {
+    margin: 0;
+    font-size: 0.9rem;
+    color: var(--muted);
+  }
+  @media (max-width: 640px) {
+    .form-card {
+      padding: 28px 20px;
+    }
+  }
+</style>
