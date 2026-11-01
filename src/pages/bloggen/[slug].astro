@@ -1,0 +1,10 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import data from '../../data/articles.json';
+export function getStaticPaths() { return data.modern.map(post => ({ params: { slug: post.slug }, props: { post } })); }
+const { post } = Astro.props;
+---
+<Layout title={post.title} description={post.excerpt} type="article">
+  <header class="page-hero"><div class="narrow"><a class="eyebrow" href="/bloggen">← Tilbage til bloggen · {post.category}</a><h1>{post.title}</h1><p class="article-meta">Ditte Munch-Andersen · Klinisk psykolog · {post.readingTime} læsetid</p></div></header>
+  <section class="content-section"><article class="narrow prose" set:html={post.content} /><div class="narrow article-cta"><h3>Vil du arbejde med dit eget mønster?</h3><p>Onlineforløbet Slip din købetrang giver dig konkrete redskaber. Du arbejder i dit eget tempo, og individuelle samtaler kan tilkøbes efter behov.</p><a class="btn" href="/#forloeb">Se onlineforløbet</a></div></section>
+</Layout>

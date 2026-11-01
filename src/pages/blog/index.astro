@@ -1,0 +1,8 @@
+---
+import Layout from '../../layouts/Layout.astro';
+import data from '../../data/articles.json';
+---
+<Layout title="Blogarkiv om købeafhængighed" description="Artikler fra Ditte Munch-Andersen om impulskøb, shoppingvaner og købeafhængighed.">
+  <header class="page-hero"><div class="wrap"><span class="eyebrow">Blogarkiv</span><h1>Tanker om købetrang</h1><p class="lead">Ældre og nyere artikler om shoppingvaner, impulskøb og psykologi.</p></div></header>
+  <section class="content-section"><div class="wrap"><p><a class="text-link" href="/bloggen">Se de nyeste, længere artikler →</a></p><div class="legacy-list">{data.legacy.map(post => <a class="legacy-card" href={`/blog/${post.slug}`}><h3>{post.title}</h3><p>{post.excerpt}</p><span class="read">Læs mere →</span></a>)}</div></div></section>
+</Layout>
