@@ -33,6 +33,60 @@ const schema = {
     <meta property="og:image" content="https://www.koebeafhaengig.dk/billeder/ditte.png" />
     <meta name="twitter:card" content="summary_large_image" />
     <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin />
+    <link rel="stylesheet" id="silktide-consent-manager-css" href="https://cdn.jsdelivr.net/gh/silktide/consent-manager@v2.0.1/silktide-consent-manager.css" integrity="sha384-EdMq+R+YOnsbelo08wPenoTlnxbAyxI11NMIxzugx/qAsbh64KcOkqxYqq6pfvO/" crossorigin="anonymous" />
+    <script is:inline src="https://cdn.jsdelivr.net/gh/silktide/consent-manager@v2.0.1/silktide-consent-manager.js" integrity="sha384-5Pt34uiIbCsvfiiZXoLi4HRf/YBXjr9c8e+gYeVo9smUaInNHYVtc8NZ8wUnXJIq" crossorigin="anonymous"></script>
+    <style is:inline>
+      #stcm-wrapper {
+        --fontFamily: 'DM Sans', system-ui, sans-serif;
+        --primaryColor: #20372f;
+        --backgroundColor: #fffdf8;
+        --textColor: #20372f;
+        --iconColor: #20372f;
+        --iconBackgroundColor: #fffdf8;
+      }
+    </style>
+    <script is:inline define:vars={{ popup }}>
+      window.silktideConsentManager.init({
+        prompt: { position: 'bottomRight' },
+        icon: { position: 'bottomLeft' },
+        backdrop: { show: false },
+        consentTypes: [
+          {
+            id: 'essential',
+            label: 'Nødvendige',
+            description: '<p>Gør, at siden kan fungere. Kan ikke slås fra.</p>',
+            required: true
+          },
+          {
+            id: 'newsletter',
+            label: 'Nyhedsbrev',
+            description: '<p>Viser tilmeldingen til nyhedsbrevet. Formularen leveres af systeme.io, og vi gemmer en lille cookie, så den ikke dukker op igen, når du har lukket den eller meldt dig til.</p>',
+            defaultValue: false,
+            ...(popup ? { scripts: [{ url: 'https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js' }] } : {})
+          }
+        ],
+        text: {
+          prompt: {
+            description: '<p>Må vi vise tilmeldingen til nyhedsbrevet? Den leveres af systeme.io. Siger du nej, bruger vi kun det, siden skal bruge for at virke.</p>',
+            acceptAllButtonText: 'Ja tak',
+            acceptAllButtonAccessibleLabel: 'Accepter alle cookies',
+            rejectNonEssentialButtonText: 'Nej tak',
+            rejectNonEssentialButtonAccessibleLabel: 'Afvis alle ikke-nødvendige cookies',
+            preferencesButtonText: 'Indstillinger',
+            preferencesButtonAccessibleLabel: 'Administrer cookieindstillinger'
+          },
+          preferences: {
+            title: 'Dine cookieindstillinger',
+            description: '<p>Vælg, hvad du vil sige ja til. Du kan altid ændre dit valg senere via cookie-ikonet nederst til venstre.</p>',
+            saveButtonText: 'Gem og luk',
+            saveButtonAccessibleLabel: 'Gem dine cookieindstillinger',
+            creditLinkText: 'Få dette cookiebanner gratis',
+            creditLinkAccessibleLabel: 'Besøg Silktide Consent Manager'
+          }
+        }
+      });
+    </script>
   </head>
   <body>
     <header class="site-header">
@@ -64,6 +118,5 @@ const schema = {
       const nav = document.querySelector('#nav-links');
       button?.addEventListener('click', () => { const open = nav?.classList.toggle('open'); button.setAttribute('aria-expanded', String(Boolean(open))); });
     </script>
-    {popup && <script is:inline id="form-script-tag-26091966" src="https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js"></script>}
   </body>
 </html>
