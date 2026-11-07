@@ -64,11 +64,16 @@ const schema = {
             description: '<p>Viser tilmeldingen til nyhedsbrevet. Formularen leveres af systeme.io, og vi gemmer en lille cookie, så den ikke dukker op igen, når du har lukket den eller meldt dig til.</p>',
             defaultValue: false,
             onAccept: function () {
-              if (!popup || document.querySelector('script[data-newsletter-popup]')) return;
+              var clickLink = document.querySelector('.systeme-show-popup-26091966');
+              if ((!popup && !clickLink) || document.querySelector('script[data-newsletter-popup]')) return;
               var s = document.createElement('script');
               s.src = 'https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js';
               s.setAttribute('data-newsletter-popup', 'true');
               s.onload = function () {
+                // Uden automatisk popup (forsiden): behold kun åbning ved klik på linket
+                if (!popup && typeof onLoadStack !== 'undefined') {
+                  Object.keys(onLoadStack).forEach(function (k) { if (k.indexOf('open_by_click') !== 0) delete onLoadStack[k]; });
+                }
                 if (document.readyState === 'complete' && typeof window.onload === 'function') window.onload();
               };
               document.head.appendChild(s);
