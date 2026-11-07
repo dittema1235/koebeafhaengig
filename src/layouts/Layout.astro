@@ -63,12 +63,24 @@ const schema = {
             label: 'Nyhedsbrev',
             description: '<p>Viser tilmeldingen til nyhedsbrevet. Formularen leveres af systeme.io, og vi gemmer en lille cookie, så den ikke dukker op igen, når du har lukket den eller meldt dig til.</p>',
             defaultValue: false,
-            ...(popup ? { scripts: [{ url: 'https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js' }] } : {})
+            onAccept: function () {
+              if (!popup || document.querySelector('script[data-newsletter-popup]')) return;
+              var s = document.createElement('script');
+              s.src = 'https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js';
+              s.setAttribute('data-newsletter-popup', 'true');
+              s.onload = function () {
+                if (document.readyState === 'complete' && typeof window.onload === 'function') window.onload();
+              };
+              document.head.appendChild(s);
+            },
+            onReject: function () {
+              if (document.querySelector('script[data-newsletter-popup]')) location.reload();
+            }
           }
         ],
         text: {
           prompt: {
-            description: '<p>Må vi vise tilmeldingen til nyhedsbrevet? Den leveres af systeme.io. Siger du nej, bruger vi kun det, siden skal bruge for at virke.</p>',
+            description: '<p>Vi bruger cookies. Nødvendige cookies er altid slået til, mens resten kun bruges, hvis du siger ja. Du kan til enhver tid ændre dit valg.</p>',
             acceptAllButtonText: 'Ja tak',
             acceptAllButtonAccessibleLabel: 'Accepter alle cookies',
             rejectNonEssentialButtonText: 'Nej tak',
