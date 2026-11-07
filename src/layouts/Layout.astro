@@ -1,8 +1,8 @@
 ---
 import '../styles/global.css';
 import { u } from '../lib/base';
-interface Props { title: string; description?: string; canonical?: string; type?: string; }
-const { title, description = 'Få hjælp til købeafhængighed og overforbrug med psykolog Ditte Munch-Andersen. Onlineforløb og individuelle samtaler.', canonical = Astro.url.pathname, type = 'website' } = Astro.props;
+interface Props { title: string; description?: string; canonical?: string; type?: string; popup?: boolean; }
+const { title, description = 'Få hjælp til købeafhængighed og overforbrug med psykolog Ditte Munch-Andersen. Onlineforløb og individuelle samtaler.', canonical = Astro.url.pathname, type = 'website', popup = true } = Astro.props;
 const canonicalUrl = new URL(canonical, 'https://www.koebeafhaengig.dk').toString();
 const fullTitle = title.includes('koebeafhaengig.dk') ? title : `${title} | koebeafhaengig.dk`;
 const schema = {
@@ -64,6 +64,6 @@ const schema = {
       const nav = document.querySelector('#nav-links');
       button?.addEventListener('click', () => { const open = nav?.classList.toggle('open'); button.setAttribute('aria-expanded', String(Boolean(open))); });
     </script>
-    <script is:inline id="form-script-tag-26091966" src="https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js"></script>
+    {popup && <script is:inline id="form-script-tag-26091966" src="https://dittemunchandersen.systeme.io/public/remote/page/464870447522a253bb3e15071f424dffe7912eda.js"></script>}
   </body>
 </html>
